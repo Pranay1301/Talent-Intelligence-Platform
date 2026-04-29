@@ -317,6 +317,16 @@ streamlit run dashboard/streamlit_app.py
 docker-compose up --build
 ```
 
+### ☁️ Cloud Deployment (Render.com Free Tier)
+
+This project is configured for 1-click cloud deployment. The provided `Dockerfile` and `start.sh` automatically spin up both the FastAPI backend and Streamlit dashboard in a single free container.
+
+1. Go to [Render Dashboard](https://dashboard.render.com/) and log in with GitHub.
+2. Click **New** → **Web Service**.
+3. Select this repository.
+4. Set **Runtime** to `Docker` and **Instance Type** to `Free`.
+5. Click **Create Web Service**. Your live URL will be ready in 3-5 minutes!
+
 ---
 
 ## 📖 Usage Example
