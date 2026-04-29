@@ -1,8 +1,8 @@
 """
 FastAPI Application Entry Point
 
-AI-Powered Resume Screening and Candidate Ranking System
-Production-ready API with CORS, logging, and comprehensive endpoints.
+AI-Powered Intelligent Talent Screening, Ranking & Hiring Recommendation Platform
+Production-grade ML + NLP + Vector Search + Explainable AI system.
 """
 
 import logging
@@ -22,11 +22,13 @@ settings = get_settings()
 
 # Create FastAPI app
 app = FastAPI(
-    title="AI Resume Screening API",
+    title="AI Talent Intelligence Platform",
     description=(
-        "An intelligent system that reads resumes, compares them with job descriptions, "
-        "ranks candidates by relevance, and explains match quality using NLP, "
-        "Sentence-BERT embeddings, FAISS vector search, and hybrid scoring."
+        "A production-grade, enterprise-level ML platform for automated resume screening, "
+        "semantic candidate ranking, and hiring recommendation. Combines NLP, Sentence-BERT "
+        "embeddings, FAISS vector search, multi-stage hybrid ranking, skill ontology mapping, "
+        "explainable AI, bias mitigation, and interview recommendation to deliver "
+        "recruiter-grade candidate evaluation at scale."
     ),
     version="1.0.0",
     docs_url="/docs",
@@ -48,13 +50,27 @@ app.include_router(router)
 
 @app.get("/")
 async def root():
-    """Root endpoint with API info."""
+    """Root endpoint with platform information."""
     return {
-        "name": "AI Resume Screening API",
+        "name": "AI Talent Intelligence Platform",
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/api/health",
-        "description": "Upload resumes, rank candidates against job descriptions with explainable AI.",
+        "description": (
+            "Enterprise-grade talent screening platform with multi-stage ranking, "
+            "explainable AI, bias mitigation, and interview recommendations."
+        ),
+        "capabilities": [
+            "Resume parsing (PDF/DOCX)",
+            "Semantic candidate-job matching (Sentence-BERT)",
+            "FAISS vector retrieval",
+            "Multi-stage hybrid ranking",
+            "Skill ontology + synonym mapping",
+            "Explainable AI scoring",
+            "Bias-aware ranking",
+            "Interview recommendations",
+            "Recruiter analytics dashboard",
+        ],
     }
 
 

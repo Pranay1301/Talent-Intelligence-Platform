@@ -1,185 +1,265 @@
-# 🎯 AI-Powered Resume Screening & Candidate Ranking System
+# 🎯 AI-Powered Intelligent Talent Screening, Ranking & Hiring Recommendation Platform
 
-An intelligent, production-grade system that automatically screens resumes, matches them against job descriptions using **semantic similarity**, and ranks candidates with **explainable AI** — going far beyond traditional keyword-based filtering.
+### Production-Grade ML + NLP + Vector Search + Explainable AI + Multi-Stage Ranking System
+
+An enterprise-level machine learning platform that automates resume screening, semantically matches candidates to job descriptions, ranks them using a multi-stage hybrid pipeline, and delivers explainable hiring recommendations — built for recruiters and hiring teams at scale.
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.31-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Sentence--BERT](https://img.shields.io/badge/Sentence--BERT-Embeddings-FF6F00?style=for-the-badge)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-4285F4?style=for-the-badge)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Deployed-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 ---
 
 ## 🧠 Problem Statement
 
-Traditional resume screening is **slow, manual, and inaccurate** — keyword-based filtering misses strong candidates who describe their experience differently.
+Traditional ATS (Applicant Tracking Systems) rely on **keyword matching**, causing strong candidates to be missed because they describe experience differently. A candidate who "Built predictive AI systems" gets rejected by a filter looking for "Machine Learning Engineer."
 
-This system solves that by:
-- **Reading resumes** automatically from PDF/DOCX files
-- **Comparing** them semantically with job descriptions
-- **Ranking candidates** by multi-dimensional relevance
-- **Explaining** why each candidate is a strong or weak match
+**This platform solves that problem** using contextual semantic understanding, multi-stage ranking, and explainable AI — reducing recruiter effort while improving hiring quality and fairness.
 
-> *"Machine Learning Engineer" matches with "Built predictive AI systems" — even without exact keyword overlap.*
+---
+
+## 🏗️ System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    MULTI-STAGE RANKING PIPELINE                  │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────┐    ┌──────────────┐    ┌───────────────────────┐  │
+│  │ Resume   │───▶│ Resume       │───▶│ Embedding Engine      │  │
+│  │ PDF/DOCX │    │ Parser       │    │ (Sentence-BERT +      │  │
+│  └──────────┘    │ (spaCy+NER)  │    │  TF-IDF Hybrid)       │  │
+│                  └──────────────┘    └───────────┬───────────┘  │
+│                                                  │               │
+│  ┌──────────┐    ┌──────────────┐                ▼               │
+│  │ Job      │───▶│ JD Parser    │    ┌───────────────────────┐  │
+│  │ Desc.    │    │ + Importance  │    │ FAISS Vector Store    │  │
+│  └──────────┘    │   Weighting  │    │ (Low-Latency Search)  │  │
+│                  └──────┬───────┘    └───────────┬───────────┘  │
+│                         │                        │               │
+│  ┌──────────────────────┼────────────────────────┘               │
+│  │                      ▼                                        │
+│  │  ╔══════════════════════════════════════════════════════════╗ │
+│  │  ║  STAGE 1: FAISS Retrieval (Fast Candidate Shortlist)    ║ │
+│  │  ╠══════════════════════════════════════════════════════════╣ │
+│  │  ║  STAGE 2: Hybrid Multi-Signal Scoring                   ║ │
+│  │  ║  • Embedding Similarity  • Skill Ontology Match         ║ │
+│  │  ║  • Experience Relevance  • Project Impact               ║ │
+│  │  ║  • Education Match       • Leadership Score             ║ │
+│  │  ║  • Domain Alignment      • Seniority Match              ║ │
+│  │  ╠══════════════════════════════════════════════════════════╣ │
+│  │  ║  STAGE 3: Re-Ranking + Intelligence Layer               ║ │
+│  │  ║  • Explainable AI        • Interview Recommendations    ║ │
+│  │  ║  • Bias Audit            • Score Attribution            ║ │
+│  │  ╚══════════════════════════════════════════════════════════╝ │
+│  │                      │                                        │
+│  └──────────────────────┼────────────────────────────────────────┘
+│                         │                                        │
+│         ┌───────────────┼───────────────┐                        │
+│         ▼               ▼               ▼                        │
+│  ┌──────────┐   ┌────────────┐   ┌──────────┐                  │
+│  │ FastAPI  │   │ Streamlit  │   │ Reports  │                  │
+│  │ REST API │   │ Dashboard  │   │ CSV/JSON │                  │
+│  └──────────┘   └────────────┘   └──────────┘                  │
+└──────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## ✨ Key Features
 
 ### 1. 📄 Intelligent Resume Parsing
-- Supports **PDF** and **DOCX** formats
-- Extracts: skills, education, experience, projects, certifications
-- Uses **spaCy NER** + regex patterns for robust entity extraction
-- Dual extraction engine (pdfplumber + PyPDF2 fallback)
+- **PDF & DOCX** support with dual extraction (pdfplumber + PyPDF2 fallback)
+- Extracts: skills, experience, education, projects, certifications, achievements, leadership roles
+- **spaCy NER** + regex pipelines for robust entity extraction
+- Handles noisy formatting and real-world resumes
 
-### 2. 📋 Job Description Analysis
-- Parses required vs. preferred skills
-- Extracts experience requirements, education needs, domain keywords
-- Section-aware parsing (requirements, responsibilities, preferred)
+### 2. 📋 Job Description Intelligence Engine
+- Classifies requirements: **critical / preferred / bonus**
+- Extracts role seniority, domain relevance, tech stack, and experience requirements
+- JD importance weighting for smarter matching
 
-### 3. 🧬 Semantic Matching (Sentence-BERT)
-- **Dense embeddings** via Sentence-BERT (`all-MiniLM-L6-v2`)
-- **Sparse features** via TF-IDF with n-grams
-- **Hybrid similarity** combining both signals for robust matching
-- Captures contextual meaning beyond keyword overlap
-
-### 4. 📊 Hybrid Scoring System
+### 3. 🧬 Skill Ontology + Synonym Mapping
 ```
-Final Score = 0.35 × Semantic Similarity
-            + 0.30 × Skill Match Score
-            + 0.20 × Experience Score
-            + 0.10 × Education Score
-            + 0.05 × Certification Bonus
+"ML Engineer" ≈ "Machine Learning Developer" ≈ "Predictive Modeling Engineer"
+"NLP" = "Natural Language Processing"
+"K8s" = "Kubernetes"
 ```
-Configurable weights for different hiring priorities.
+- **200+ skill synonyms** with abbreviation expansion
+- Role taxonomy for intelligent title matching
+- Hierarchical skill graph (partial credit for parent skills)
+- Domain normalization across industries
 
-### 5. ⚡ FAISS Vector Search
-- **Facebook AI Similarity Search** for production-scale retrieval
-- Low-latency nearest-neighbor search across large resume datasets
-- Persistent index with save/load support
-- Normalized embeddings with inner-product similarity
+### 4. ⚡ Multi-Stage Hybrid Ranking Pipeline
 
-### 6. 🔍 Explainable AI Layer
-Every ranking includes:
+| Stage | Description | Speed |
+|-------|-------------|-------|
+| **Stage 1: Retrieval** | FAISS nearest-neighbor search | ~5ms |
+| **Stage 2: Scoring** | 9-dimensional hybrid scoring with ontology | ~50ms |
+| **Stage 3: Re-ranking** | Explanations + interview recs + bias audit | ~100ms |
+
+**Hybrid Scoring Formula:**
 ```
-✅ Matched Skills: Python, NLP, FastAPI
+Final Score = 0.25 × Semantic Similarity
+            + 0.25 × Skill Match (Ontology-Aware)
+            + 0.15 × Experience Relevance
+            + 0.10 × Project Impact
+            + 0.08 × Education Match
+            + 0.05 × Leadership Score
+            + 0.05 × Domain Alignment
+            + 0.04 × Certification Bonus
+            + 0.03 × Seniority Match
+```
+Configurable weights with role-specific presets (ML Engineer, Data Scientist, Engineering Manager).
+
+### 5. 🔍 Explainable AI Layer
+Every ranking decision includes transparent reasoning:
+```
+✅ Matched Skills: Python, NLP, FastAPI (75% coverage)
 ❌ Missing Skills: AWS, Docker
-💼 Experience Match: 3/4 years
+💼 Experience: 5.0/3-7 years (meets requirement)
+📂 Project Relevance: HIGH (2 relevant projects)
+🌐 Domain Alignment: Aligned
 🎓 Education: Master's (meets requirement)
-🏆 Recommendation: STRONG MATCH - Highly recommended for interview
+
+Top Positive Factors: Semantic relevance: 89%, Skill match: 75%
+Top Negative Factors: Domain alignment: 45%
+
+📝 One-liner: Strong fit with 6 skill matches, 75% coverage, meets experience requirements.
 ```
 
-### 7. 📈 Recruiter Dashboard (Streamlit)
-- Upload resumes (drag & drop)
-- Paste job descriptions
-- Interactive ranked candidate table
-- Score breakdown radar charts
-- Downloadable JSON/CSV reports
+### 6. 🎯 Interview Recommendation Engine
+```
+Decision:        STRONG_HIRE (92% confidence)
+Role Fit:        HIGH
+Growth Potential: MEDIUM
+Suggested Round: TECHNICAL_DEEP_DIVE
 
-### 8. 🚀 Production API (FastAPI)
-Full REST API with auto-generated docs:
+Interview Focus Areas:
+- System Design: Assess proficiency in Docker, Kubernetes
+- MLOps: Probe model deployment experience
+
+Risk Factors:
+- Multiple short tenures — assess commitment
+
+Hiring Notes:
+Strong profile with 6 matched skills and 5 years experience.
+Interview focus: System Design depth assessment.
+```
+
+### 7. ✅ Bias Mitigation Layer
+- **PII redaction** from scoring pipeline (name, gender, age, nationality)
+- **Prestige-blind** education scoring (degree level, not institution name)
+- **Fairness audit** on complete rankings (detects institutional clustering)
+- **Statistical parity** checks with configurable thresholds
+- Enterprise-grade compliance for equitable hiring
+
+### 8. 📊 Model Evaluation Framework
+Measurable KPIs that interviewers love:
+
+| Metric | Description |
+|--------|-------------|
+| **Precision@K** | Fraction of top-K results that are relevant |
+| **Recall@K** | Fraction of relevant items found in top-K |
+| **NDCG** | Normalized Discounted Cumulative Gain |
+| **MRR** | Mean Reciprocal Rank |
+| **Latency** | P50/P95/P99 ranking latency |
+| **Baseline Comparison** | Semantic system vs. keyword-based ATS |
+
+### 9. 📈 Recruiter Analytics Dashboard
+- Resume upload with drag & drop
+- JD input with intelligent parsing
+- Interactive ranked candidate table with decisions
+- Radar chart score breakdowns
+- Interview recommendation panels
+- Hiring funnel analytics (skill distribution, experience ranges)
+- Bias/fairness audit display
+- Downloadable CSV/JSON reports
+
+### 10. 🚀 Production API (FastAPI)
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/upload_resume` | POST | Upload & parse resume file |
 | `/api/upload_resume_text` | POST | Submit resume as text |
-| `/api/rank_candidates` | POST | Rank candidates against JD |
-| `/api/candidates` | GET | List all candidates |
-| `/api/candidates/{id}` | GET | Get candidate details |
-| `/api/get_candidate_score/{id}` | GET | Score candidate for a JD |
+| `/api/analyze_resume/{id}` | GET | Detailed resume analysis |
+| `/api/parse_jd` | POST | Parse & classify JD requirements |
+| `/api/rank_candidates` | POST | Multi-stage candidate ranking |
+| `/api/get_candidate_score/{id}` | GET | Score candidate against JD |
+| `/api/get_explanations` | POST | Detailed ranking explanations |
+| `/api/interview_recommendation/{id}` | GET | Interview strategy & focus areas |
 | `/api/export_report` | POST | Export ranking report |
+| `/api/dashboard_metrics` | GET | Recruiter analytics data |
 | `/api/health` | GET | System health check |
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│   Resume     │────▶│  Resume      │────▶│   Embedding     │
-│   (PDF/DOCX) │     │  Parser      │     │   Engine        │
-└─────────────┘     │  (spaCy+NER) │     │  (SBERT+TF-IDF) │
-                    └──────────────┘     └────────┬────────┘
-                                                  │
-┌─────────────┐     ┌──────────────┐              ▼
-│   Job        │────▶│  JD Parser   │     ┌─────────────────┐
-│   Description│     │              │     │   FAISS Vector   │
-└─────────────┘     └──────┬───────┘     │   Store          │
-                           │              └────────┬────────┘
-                           ▼                       │
-                    ┌──────────────┐               │
-                    │  Ranking     │◀──────────────┘
-                    │  Engine      │
-                    │  (Hybrid)    │
-                    └──────┬───────┘
-                           │
-              ┌────────────┼────────────┐
-              ▼            ▼            ▼
-       ┌──────────┐ ┌──────────┐ ┌──────────┐
-       │ FastAPI   │ │Streamlit │ │ Reports  │
-       │ REST API  │ │Dashboard │ │ Export   │
-       └──────────┘ └──────────┘ └──────────┘
-```
 
 ---
 
 ## 📁 Project Structure
 
 ```
-resume-screening-system/
+talent-intelligence-platform/
 │
 ├── app/
 │   ├── api/
-│   │   ├── __init__.py
-│   │   └── routes.py              # FastAPI route definitions
+│   │   └── routes.py                  # FastAPI endpoints (14 routes)
 │   ├── models/
-│   │   ├── __init__.py
-│   │   └── schemas.py             # Pydantic request/response models
+│   │   └── schemas.py                 # Pydantic request/response models
 │   ├── services/
-│   │   ├── __init__.py
-│   │   └── screening_service.py   # Main orchestration service
+│   │   ├── screening_service.py       # Main orchestration service
+│   │   └── evaluation.py             # Ranking evaluation framework
+│   ├── pipelines/
+│   │   └── screening_pipeline.py      # Multi-stage ranking pipeline
 │   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── file_utils.py          # File handling utilities
-│   │   └── text_utils.py          # NLP text preprocessing
-│   ├── __init__.py
-│   ├── config.py                  # Application configuration
-│   └── main.py                    # FastAPI entry point
+│   │   ├── file_utils.py             # File handling
+│   │   └── text_utils.py             # NLP text preprocessing
+│   ├── config.py                      # Application configuration
+│   └── main.py                        # FastAPI entry point
 │
 ├── resume_parser/
-│   ├── __init__.py
-│   └── parser.py                  # PDF/DOCX resume extraction
+│   └── parser.py                      # PDF/DOCX resume extraction
 │
 ├── jd_parser/
-│   ├── __init__.py
-│   └── parser.py                  # Job description analysis
+│   └── parser.py                      # JD analysis & requirement classification
 │
 ├── embedding_engine/
-│   ├── __init__.py
-│   ├── engine.py                  # Sentence-BERT + TF-IDF embeddings
-│   └── vector_store.py            # FAISS index management
+│   ├── engine.py                      # Sentence-BERT + TF-IDF hybrid
+│   └── vector_store.py               # FAISS index management
 │
 ├── ranking_engine/
-│   ├── __init__.py
-│   └── ranker.py                  # Hybrid scoring + explainability
+│   └── ranker.py                      # Hybrid scoring engine
+│
+├── explainability/
+│   └── explainer.py                   # Score attribution & explanation generation
+│
+├── interview_engine/
+│   └── recommender.py                # Interview strategy & recommendations
+│
+├── bias_mitigation/
+│   └── fairness.py                   # PII redaction, prestige detection, fairness audit
+│
+├── configs/
+│   ├── skill_ontology.py             # 200+ skill synonyms, role taxonomy, skill hierarchy
+│   └── scoring_weights.py            # Configurable weights & role presets
 │
 ├── dashboard/
-│   ├── __init__.py
-│   └── streamlit_app.py           # Recruiter dashboard UI
+│   └── streamlit_app.py              # Recruiter intelligence dashboard
 │
 ├── database/
-│   ├── __init__.py
-│   └── models.py                  # SQLAlchemy ORM models
+│   └── models.py                      # SQLAlchemy ORM models
 │
-├── faiss_index/                   # FAISS index storage
+├── faiss_index/                       # FAISS index persistence
 ├── tests/
-│   ├── __init__.py
-│   └── test_system.py             # Unit & integration tests
+│   └── test_system.py                # Unit & integration tests
 │
+├── .github/workflows/ci.yml          # GitHub Actions CI/CD
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
-├── .env.example
-├── .gitignore
+├── setup.py
+├── LICENSE
 └── README.md
 ```
 
@@ -189,13 +269,14 @@ resume-screening-system/
 
 | Category | Technologies |
 |----------|-------------|
-| **NLP** | spaCy, NLTK, Sentence Transformers, BERT |
-| **ML** | Scikit-learn, TF-IDF, Cosine Similarity |
+| **NLP** | spaCy, NLTK, Sentence Transformers (BERT), Transformers |
+| **ML** | Scikit-learn, XGBoost, TF-IDF, Cosine Similarity |
 | **Vector Search** | FAISS (Facebook AI Similarity Search) |
+| **Embeddings** | Sentence-BERT (`all-MiniLM-L6-v2`) |
 | **Backend** | FastAPI, Pydantic, Uvicorn |
 | **Frontend** | Streamlit, Plotly |
 | **Database** | SQLAlchemy, SQLite (dev) / PostgreSQL (prod) |
-| **Deployment** | Docker, Docker Compose |
+| **Deployment** | Docker, Docker Compose, GitHub Actions |
 | **Testing** | Pytest, HTTPx |
 
 ---
@@ -204,82 +285,57 @@ resume-screening-system/
 
 ### Prerequisites
 - Python 3.11+
-- pip
+- pip / venv
 
-### 1. Clone the Repository
+### Installation
 ```bash
-git clone https://github.com/yourusername/resume-screening-system.git
-cd resume-screening-system
-```
+git clone https://github.com/yourusername/talent-intelligence-platform.git
+cd talent-intelligence-platform
 
-### 2. Set Up Virtual Environment
-```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-### 3. Install Dependencies
-```bash
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
-```
 
-### 4. Configure Environment
-```bash
 cp .env.example .env
-# Edit .env with your settings (defaults work for local development)
 ```
 
-### 5. Start the API Server
+### Run
 ```bash
+# Terminal 1: API Server
 uvicorn app.main:app --reload --port 8000
-```
-API docs available at: `http://localhost:8000/docs`
 
-### 6. Start the Dashboard (in another terminal)
-```bash
+# Terminal 2: Dashboard
 streamlit run dashboard/streamlit_app.py
 ```
-Dashboard at: `http://localhost:8501`
+- API docs: `http://localhost:8000/docs`
+- Dashboard: `http://localhost:8501`
 
-### Docker Deployment
+### Docker
 ```bash
 docker-compose up --build
 ```
-- API: `http://localhost:8000`
-- Dashboard: `http://localhost:8501`
 
 ---
 
-## 📖 Usage Guide
-
-### Upload Resumes via API
-```bash
-# Upload a PDF resume
-curl -X POST http://localhost:8000/api/upload_resume \
-  -F "file=@resume.pdf"
-
-# Upload resume as text
-curl -X POST http://localhost:8000/api/upload_resume_text \
-  -H "Content-Type: application/json" \
-  -d '{"name": "John Doe", "resume_text": "Experienced ML Engineer..."}'
-```
+## 📖 Usage Example
 
 ### Rank Candidates
 ```bash
 curl -X POST http://localhost:8000/api/rank_candidates \
   -H "Content-Type: application/json" \
   -d '{
-    "jd_text": "Looking for a Senior ML Engineer with 5+ years...",
-    "top_k": 10
+    "jd_text": "Looking for a Senior ML Engineer with 5+ years experience in Python, TensorFlow, NLP, and AWS. Must have production deployment experience.",
+    "top_k": 5
   }'
 ```
 
-### Response Example
+### Response (Abbreviated)
 ```json
 {
-  "job_title": "Senior Machine Learning Engineer",
-  "total_candidates": 25,
+  "job_title": "Senior ML Engineer",
+  "total_candidates_in_pool": 50,
   "ranked_candidates": [
     {
       "rank": 1,
@@ -288,35 +344,42 @@ curl -X POST http://localhost:8000/api/rank_candidates \
       "score_breakdown": {
         "scores": {
           "embedding_similarity": 0.92,
-          "skill_match_score": 0.85,
-          "experience_score": 1.0,
-          "education_score": 1.0,
-          "certification_bonus": 0.7
+          "skill_match": 0.85,
+          "experience_relevance": 1.0,
+          "project_impact": 0.8,
+          "domain_alignment": 0.7
         },
         "explanation": {
-          "matched_skills": ["Python", "TensorFlow", "NLP", "AWS"],
-          "missing_skills": ["Kubernetes"],
-          "experience_match": "6.0/5-8 years",
-          "recommendation": "STRONG MATCH - Highly recommended for interview"
+          "skill_analysis": { "matched": ["Python", "TensorFlow", "NLP"], "coverage_pct": 75.0 },
+          "summary": { "recommendation": "STRONG MATCH — Highly recommended for interview" }
         }
-      }
+      },
+      "interview_recommendation": {
+        "decision": "STRONG_HIRE",
+        "confidence": 0.92,
+        "interview_focus_areas": ["System Design: Assess Docker, Kubernetes proficiency"],
+        "role_fit": "HIGH",
+        "hiring_notes": "Strong profile with 6 matched skills and 5 years experience."
+      },
+      "fairness_score": 1.0
     }
-  ]
+  ],
+  "pipeline_metrics": {
+    "stage1_retrieval_ms": 4.5,
+    "stage2_scoring_ms": 52.3,
+    "stage3_reranking_ms": 98.1,
+    "total_ms": 155.2
+  },
+  "fairness_audit": { "status": "audit_complete", "issues_found": 0 }
 }
 ```
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Testing
 
 ```bash
-# Run all tests
 pytest tests/ -v
-
-# Run specific test class
-pytest tests/test_system.py::TestRankingEngine -v
-
-# Run with coverage
 pytest tests/ --cov=. --cov-report=html
 ```
 
@@ -324,50 +387,37 @@ pytest tests/ --cov=. --cov-report=html
 
 ## 🔧 Configuration
 
-Key configuration via `.env`:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `sqlite:///./resume_screening.db` | Database connection string |
-| `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Sentence-BERT model |
-| `SPACY_MODEL` | `en_core_web_sm` | spaCy NLP model |
-| `API_PORT` | `8000` | FastAPI server port |
-| `FAISS_INDEX_PATH` | `./faiss_index/index.faiss` | FAISS index file location |
-
-### Scoring Weights
-Customize in `ranking_engine/ranker.py`:
+### Scoring Weight Presets
 ```python
-DEFAULT_WEIGHTS = {
-    "embedding_similarity": 0.35,  # Semantic relevance
-    "skill_match": 0.30,           # Explicit skill overlap
-    "experience": 0.20,            # Years and relevance
-    "education": 0.10,             # Degree match
-    "certifications": 0.05,        # Bonus
+# configs/scoring_weights.py
+WEIGHT_PRESETS = {
+    "ml_engineer":       { "project_impact": 0.15, "leadership_score": 0.02, ... },
+    "senior_engineer":   { "experience_relevance": 0.20, "leadership_score": 0.10, ... },
+    "data_scientist":    { "education_relevance": 0.12, "project_impact": 0.15, ... },
+    "engineering_manager": { "leadership_score": 0.20, "experience_relevance": 0.20, ... },
 }
 ```
 
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Environment Variables
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | `sqlite:///./resume_screening.db` | Database connection |
+| `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Sentence-BERT model |
+| `FAISS_INDEX_PATH` | `./faiss_index/index.faiss` | FAISS index location |
+| `API_PORT` | `8000` | API server port |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE).
 
 ---
 
 ## 🙏 Acknowledgments
 
-- [Sentence-Transformers](https://www.sbert.net/) for state-of-the-art semantic embeddings
-- [FAISS](https://github.com/facebookresearch/faiss) by Meta AI for efficient similarity search
-- [spaCy](https://spacy.io/) for industrial-strength NLP
-- [FastAPI](https://fastapi.tiangolo.com/) for high-performance API development
-- [Streamlit](https://streamlit.io/) for rapid dashboard prototyping
+- [Sentence-Transformers](https://www.sbert.net/) — State-of-the-art semantic embeddings
+- [FAISS](https://github.com/facebookresearch/faiss) — Meta AI similarity search
+- [spaCy](https://spacy.io/) — Industrial-strength NLP
+- [FastAPI](https://fastapi.tiangolo.com/) — High-performance async API
+- [Streamlit](https://streamlit.io/) — Rapid dashboard development
