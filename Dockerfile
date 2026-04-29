@@ -23,5 +23,8 @@ RUN mkdir -p uploads faiss_index reports
 # Expose ports
 EXPOSE 8000 8501
 
-# Default command: run FastAPI
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Make start script executable
+RUN chmod +x start.sh
+
+# Default command: run the startup script
+CMD ["./start.sh"]
