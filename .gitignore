@@ -1,0 +1,59 @@
+# Environment
+.env
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db
+*.sqlite3
+
+# FAISS Index (generated)
+faiss_index/*.faiss
+faiss_index/*.json
+!faiss_index/.gitkeep
+
+# Uploaded files
+uploads/
+*.pdf
+*.docx
+
+# Model cache
+model_cache/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Docker
+.dockerignore
+
+# Logs
+*.log
+
+# Reports
+reports/
