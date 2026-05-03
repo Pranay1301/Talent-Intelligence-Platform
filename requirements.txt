@@ -2,8 +2,8 @@
 spacy==3.7.4
 nltk==3.8.1
 sentence-transformers==2.5.1
-scikit-learn==1.4.1
-xgboost==2.0.3
+scikit-learn>=1.4.0
+xgboost>=2.0.0
 torch==2.2.1
 
 # Vector Search
